@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metro_trams/components/TextFieldInput.dart';
 import 'package:metro_trams/constants.dart';
 import 'package:metro_trams/services/network.dart';
+import 'dart:convert';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key, this.title}) : super(key: key);
@@ -14,11 +15,11 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   NetworkHelper networkHelper = NetworkHelper();
-List stationNames;
+  List stationNames;
 
   @override
   Widget build(BuildContext context) {
-      print(stationNames);
+    print(stationNames);
     return Scaffold(
       backgroundColor: Color(kBackgroundColour),
       appBar: AppBar(
@@ -34,10 +35,11 @@ List stationNames;
               inputField: TextField(
                   autofocus: true,
                   onChanged: (value) async {
-                      List stationName = await networkHelper.lookupStationNames(value);
-                      setState(() {
-                       stationNames = stationName;
-                      });
+                    List stationName =
+                        await networkHelper.lookupStationNames(value);
+                    setState(() {
+                      stationNames = stationName;
+                    });
                   },
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
@@ -46,17 +48,35 @@ List stationNames;
                     hintStyle: TextStyle(color: Colors.white),
                   )),
             ),
-            Padding(
-                padding: EdgeInsets.only(top: 40.0),
-                child: Icon(Icons.youtube_searched_for,
-                    color: Colors.pinkAccent, size: 100)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50.0),
-              child: Text(
-                  'Enter a few words to search a station on Metro Trams',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 20.0)),
-            )
+            stationNames == null
+                ? Column(
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(top: 40.0),
+                          child: Icon(Icons.youtube_searched_for,
+                              color: Colors.pinkAccent, size: 100)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 50.0),
+                        child: Text(
+                            'Enter a few words to search a station on Metro Trams',
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20.0)),
+                      ),
+                    ],
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: stationNames.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 32.0),
+                          trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white,),
+                          title: Text('${stationNames[index]}',
+                              style: TextStyle(color: Colors.white)));
+                    },
+                  )),
           ],
         ),
       ),
