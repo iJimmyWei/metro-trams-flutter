@@ -5,9 +5,10 @@ import 'package:metro_trams/services/network.dart';
 import 'dart:convert';
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen({Key key, this.title}) : super(key: key);
+  SearchScreen({Key key, this.title, this.stationLocation}) : super(key: key);
 
   final String title;
+  final String stationLocation;
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -44,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Manchester',
+                    hintText: widget.stationLocation,
                     hintStyle: TextStyle(color: Colors.white),
                   )),
             ),
@@ -72,9 +73,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     itemBuilder: (context, index) {
                       return ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: 32.0),
+                          onTap: () => Navigator.pop(context, stationNames[index]),
                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white,),
                           title: Text('${stationNames[index]}',
-                              style: TextStyle(color: Colors.white)));
+                          style: TextStyle(color: Colors.white)));
                     },
                   )),
           ],

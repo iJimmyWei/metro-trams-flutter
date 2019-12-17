@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(title: 'Metro Trams'),
-        '/search': (context) => SearchScreen(title: 'Search')
+        '/search': (context) => SearchScreen(title: 'Search'),
       },
     );
   }
