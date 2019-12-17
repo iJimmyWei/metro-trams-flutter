@@ -69,6 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
     @override
     void initState() {
         super.initState();
+
+        getLatestStationData();
+
         timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getLatestStationData());
     }
 
@@ -83,8 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (name != null) {
             this.setState(() => stationLocation = name);
-
-            print(name);
 
             // Force update
             getLatestStationData();
