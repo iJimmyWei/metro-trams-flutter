@@ -1,16 +1,13 @@
-# metro_trams
+# Manchester Metro Trams App
 
-A new Flutter project.
+Manchester Metro Trams is built using Flutter to show the next upcoming trams from your chosen station. It's currently released on Android ([https://play.google.com/store/apps/details?id=com.jimmywei.metro_trams](https://play.google.com/store/apps/details?id=com.jimmywei.metro_trams)).
 
-## Getting Started
+No plans are to release for iOS unless there is a demand to.
 
-This project is a starting point for a Flutter application.
+# Getting Started
+1. Setup your API Key with an `.env` file in the root directory, i.e `API_KEY=abcdefg12345` - you will need to create an account at TfGM ([https://developer.tfgm.com/](https://developer.tfgm.com/)) and apply for an API key.
+2. Create a `key.properties` file at the `android/` root directory containing your keystore file to allow debugging (`android/key.properties`)
+3. Hit F5/Debug and watch the app run!
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Contributing
+Feel free to submit issues/PR's to contribute to this app.
