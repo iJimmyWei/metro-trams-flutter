@@ -1,51 +1,48 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
+import 'responseDto.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkHelper {
-    Future<dynamic> lookupStationNames(String searchInput) async {
+    Future<List<String>> lookupStationNames(String searchInput) async {
         // Empty search strings to reset search UI
         if (searchInput == "") {
             return null;
         }
 
-        List stations = [];
+        List<String> stationNames = [];
 
         // Picadilly and picadilly gardens search not specific enough
         // If a search is done, it falls through to piccadilly on their api
         var url = 'https://api.tfgm.com/odata/Metrolinks?\$filter=contains(stationLocation, \'$searchInput\')';
         var response = await http.get(url, headers: {
-        'Ocp-Apim-Subscription-Key': 'e70f3d5bd74c4019818af8e76ef4f9ff'
+          'Ocp-Apim-Subscription-Key': DotEnv().env['API_KEY']
         });
 
         if (response.statusCode == 200) {
-            Map data = jsonDecode(response.body);
+            ResponseDto res = ResponseDto.fromJson(response.body);
 
-            for (var station in data["value"]) {
-                String stationName = station["StationLocation"];
+            for (var station in res.station) {
+                String stationName = station.stationLocation;
 
-                if (!stations.contains(stationName)) {
-                stations.add(stationName);
+                if (!stationNames.contains(stationName)) {
+                  stationNames.add(station.stationLocation);
                 }
-
-                stations.sort((a, b) => a.compareTo(b));
             }
+        
+            stationNames.sort((a, b) => a.compareTo(b));
 
-            return stations;
+            return stationNames;
         } else {
-            return "error";
+            return [];
         }
     }
 
-    Future<dynamic> getStationData(String searchInput) async {
+    Future<List<Station>> getStationData(String searchInput) async {
         // Empty search strings to reset search UI
         if (searchInput == "" || searchInput == null) {
             return null;
         }
 
-        List stations = [];
-
-        // Handle apostraphe
         var url;
         if (searchInput.contains("'")) {
             String searchQuery = searchInput.split("'")[0];
@@ -55,22 +52,16 @@ class NetworkHelper {
             url = 'https://api.tfgm.com/odata/Metrolinks?\$filter=(stationLocation eq \'$searchInput\')';
         }
 
-        print(url);
-
         var response = await http.get(url, headers: {
-        'Ocp-Apim-Subscription-Key': 'e70f3d5bd74c4019818af8e76ef4f9ff'
+          'Ocp-Apim-Subscription-Key': DotEnv().env['API_KEY']
         });
 
         if (response.statusCode == 200) {
-            Map data = jsonDecode(response.body);
+            ResponseDto res = ResponseDto.fromJson(response.body);
 
-            for (var station in data["value"]) {
-                stations.add(station);
-            }
-
-            return stations;
+            return res.station;
         } else {
-            return "error";
+          return null;
         }
     }
 }

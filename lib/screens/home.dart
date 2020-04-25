@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:metro_trams/components/textFieldButton.dart';
 import 'package:metro_trams/constants.dart';
+import 'package:badges/badges.dart';
 
 import '../services/network.dart';
+import '../services/responseDto.dart';
 
 class HomeScreen extends StatefulWidget {
     HomeScreen({Key key, this.title}) : super(key: key);
@@ -15,8 +17,8 @@ class HomeScreen extends StatefulWidget {
     _HomeScreenState createState() => _HomeScreenState();
 }
 
-class Tram {
-    Tram({this.dest, this.line, this.waitTime, this.carriages, this.status});
+class TramCard extends StatelessWidget {
+    TramCard({this.dest, this.line, this.waitTime, this.carriages, this.status});
 
     final String dest;
     final String line;
@@ -24,7 +26,7 @@ class Tram {
     final String carriages;
     final String status;
 
-    Card render() {
+    Widget build(BuildContext context) {
         return Card(
             child: (
                 ListTile(
@@ -53,7 +55,7 @@ class Tram {
                     title: Text('$dest',
                             style: TextStyle(color: Colors.black)
                         ),
-                    subtitle: Text("${carriages} Carriage"),
+                    subtitle: Text("$carriages Carriage"),
                 )
           ),
         );
@@ -63,8 +65,9 @@ class Tram {
 class _HomeScreenState extends State<HomeScreen> {
     NetworkHelper networkHelper = NetworkHelper();
     String stationLocation = "Manchester Airport";
-    List trams;
+    List<Station> stationPlatforms;
     Timer timer;
+    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
     @override
     void initState() {
@@ -76,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     void getLatestStationData() async {
-        List data = await networkHelper.getStationData(this.stationLocation);
-        
-        this.setState(() => trams = data);
+        var data = await networkHelper.getStationData(this.stationLocation);
+
+        this.setState(() => stationPlatforms = data);
     }
 
     void getStationName() async {
@@ -92,13 +95,36 @@ class _HomeScreenState extends State<HomeScreen> {
         }
     }
 
+    void showInSnackBar(String value) {
+        _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value), duration: Duration(seconds: 10),));
+    }
+
     @override
     Widget build(BuildContext context) {
         return Scaffold(
             backgroundColor: Color(kBackgroundColour),
             appBar: AppBar(
                 title: Text(widget.title),
+                actions: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: stationPlatforms[0].messageBoard.length > 0 ? 4.0 : 0.0),
+                    child: Badge(
+                      showBadge: stationPlatforms[0].messageBoard.length > 0,
+                      badgeContent: Text(stationPlatforms[0].messageBoard.length > 0 ? "1" : "0"),
+                      badgeColor: Colors.orangeAccent,
+                      position: BadgePosition.topRight(right: 0, top: 0),
+                      child: IconButton(
+                        icon: Icon(Icons.warning),
+                        onPressed: () => showInSnackBar(
+                          stationPlatforms[0].messageBoard.length > 0
+                            ? stationPlatforms[0].messageBoard
+                            : "No new travel updates"
+                        ))
+                    ),
+                  )
+                ],
             ),
+            key: _scaffoldKey,
             body: Center(
                 // Center is a layout widget. It takes a single child and positions it
                 // in the middle of the parent.
@@ -111,9 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Expanded(
                         child: ListView.builder(
-                            
                         shrinkWrap: true,
-                        itemCount: trams.map((t) => t['Dest0'] != "").length,
+                        itemCount: stationPlatforms != null ? stationPlatforms.length : 0,
                         itemBuilder: (context, index) {
                             return Column(
                               children: <Widget>[
@@ -131,36 +156,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 32.0),
                                       child: Column(
-                                        children: <Widget>[
-                                          trams[index]['Dest0'] != "" ? Tram(
-                                              dest: trams[index]['Dest0'],
-                                              line: trams[index]['Line'],
-                                              waitTime: trams[index]['Wait0'],
-                                              carriages: trams[index]['Carriages0'],
-                                              status: trams[index]['Status0']
-                                          ).render() : SizedBox.shrink(),
-                                          trams[index]['Dest1'] != "" ? Tram(
-                                              dest: trams[index]['Dest1'],
-                                              line: trams[index]['Line'],
-                                              waitTime: trams[index]['Wait1'],
-                                              carriages: trams[index]['Carriages1'],
-                                              status: trams[index]['Status1']
-                                          ).render() : SizedBox.shrink(),
-                                          trams[index]['Dest2'] != "" ? Tram(
-                                              dest: trams[index]['Dest2'],
-                                              line: trams[index]['Line'],
-                                              waitTime: trams[index]['Wait2'],
-                                              carriages: trams[index]['Carriages2'],
-                                              status: trams[index]['Status2']
-                                          ).render() : SizedBox.shrink(),
-                                          trams[index]['Dest3'] != "" ? Tram(
-                                              dest: trams[index]['Dest3'],
-                                              line: trams[index]['Line'],
-                                              waitTime: trams[index]['Wait3'],
-                                              carriages: trams[index]['Carriages3'],
-                                              status: trams[index]['Status3']
-                                          ).render() : SizedBox.shrink(),
-                                        ],
+                                        children:
+                                        <Widget>[
+                                          for (var t in stationPlatforms[index].trams.where((t) => t.dest != ""))
+                                            TramCard(
+                                              dest: t.dest,
+                                              line: stationPlatforms[index].line,
+                                              waitTime: t.waitTime,
+                                              carriages: t.carriages,
+                                              status: t.status
+                                            )
+                                        ]
                                       ),
                                     ),
                                   ],
