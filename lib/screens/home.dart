@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metro_trams/components/MessageBoardIcon.dart';
-import 'package:metro_trams/components/SearchFieldButton.dart';
-import 'package:metro_trams/components/TramCard.dart';
+import 'package:metro_trams/components/message_board_button.dart';
+import 'package:metro_trams/components/search_field_button.dart';
+import 'package:metro_trams/components/tram_card.dart';
 import 'package:metro_trams/constants.dart';
 
 import '../services/network.dart';

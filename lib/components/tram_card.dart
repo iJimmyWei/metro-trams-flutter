@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TramCard extends StatelessWidget {
-  TramCard({this.dest, this.line, this.waitTime, this.carriages, this.status});
+  TramCard(
+      {@required this.dest,
+      @required this.line,
+      @required this.waitTime,
+      @required this.carriages,
+      @required this.status});
 
   final String dest;
   final String line;

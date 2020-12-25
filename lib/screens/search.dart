@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metro_trams/components/SearchFieldInput.dart';
+import 'package:metro_trams/components/search_field_input.dart';
 import 'package:metro_trams/constants.dart';
 import 'package:metro_trams/services/network.dart';
 
