@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:metro_trams/components/TextFieldInput.dart';
+import 'package:metro_trams/components/SearchFieldInput.dart';
 import 'package:metro_trams/constants.dart';
 import 'package:metro_trams/services/network.dart';
-import 'dart:convert';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key, this.title, this.stationLocation}) : super(key: key);
@@ -31,7 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
         // in the middle of the parent.
         child: Column(
           children: <Widget>[
-            TextFieldInput(
+            SearchFieldInput(
               icon: Icon(Icons.search, color: Colors.pink),
               inputField: TextField(
                   autofocus: true,
@@ -72,11 +71,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     itemCount: stationNames.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 32.0),
-                          onTap: () => Navigator.pop(context, stationNames[index]),
-                          trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white,),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 32.0),
+                          onTap: () =>
+                              Navigator.pop(context, stationNames[index]),
+                          trailing: Icon(
+                            Icons.keyboard_arrow_right,
+                            color: Colors.white,
+                          ),
                           title: Text('${stationNames[index]}',
-                          style: TextStyle(color: Colors.white)));
+                              style: TextStyle(color: Colors.white)));
                     },
                   )),
           ],

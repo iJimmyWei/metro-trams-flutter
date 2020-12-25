@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextFieldInput extends StatelessWidget {
-  const TextFieldInput({Key key, this.icon, this.inputField})
+class SearchFieldInput extends StatelessWidget {
+  const SearchFieldInput({Key key, this.icon, this.inputField})
       : super(key: key);
 
   final Icon icon;
@@ -21,9 +21,7 @@ class TextFieldInput extends StatelessWidget {
               this.icon,
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(left: 8.0),
-                  child: this.inputField
-              ),
+                    margin: EdgeInsets.only(left: 8.0), child: this.inputField),
               )
             ],
           ),
@@ -33,5 +31,3 @@ class TextFieldInput extends StatelessWidget {
     );
   }
 }
-
-
