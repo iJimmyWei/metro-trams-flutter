@@ -3,12 +3,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:metro_trams/constants.dart';
 import 'package:metro_trams/screens/home.dart';
 import 'package:metro_trams/screens/search.dart';
-import 'dart:io' as io;
 
 Future main() async {
-  if (io.File(".env").existsSync()) {
-    await DotEnv().load('.env');
-  }
+  await DotEnv().load('.env');
 
   runApp(MyApp());
 }

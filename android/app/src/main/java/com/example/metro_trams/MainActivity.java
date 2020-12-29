@@ -1,4 +1,4 @@
-package com.example.metro_trams;
+package com.jimmywei.metro_trams;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
