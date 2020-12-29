@@ -2,19 +2,21 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class ResponseDto {
-    final String odataContext;
-    final List<Station> station;
+  final String odataContext;
+  final List<Station> station;
 
-    ResponseDto({
-        @required this.odataContext,
-        @required this.station,
-    });
+  ResponseDto({
+    @required this.odataContext,
+    @required this.station,
+  });
 
-    factory ResponseDto.fromJson(String str) => ResponseDto.fromMap(json.decode(str));
-    factory ResponseDto.fromMap(Map<String, dynamic> json) => ResponseDto(
+  factory ResponseDto.fromJson(String str) =>
+      ResponseDto.fromMap(json.decode(str));
+  factory ResponseDto.fromMap(Map<String, dynamic> json) => ResponseDto(
         odataContext: json["@odata.context"],
-        station: List<Station>.from(json["value"].map((x) => Station.fromMap(x))),
-    );
+        station:
+            List<Station>.from(json["value"].map((x) => Station.fromMap(x))),
+      );
 }
 
 class Tram {
@@ -24,43 +26,40 @@ class Tram {
   final String status;
 
   Tram(
-    {
-      @required this.dest,
+      {@required this.dest,
       @required this.waitTime,
       @required this.carriages,
-      @required this.status
-    }
-  );
+      @required this.status});
 }
 
 class Station {
-    final int id;
-    final String line;
-    final String tlaref;
-    final String pidref;
-    final String stationLocation;
-    final String atcoCode;
-    final String direction;
-    final List<Tram> trams;
-    final String messageBoard;
-    final DateTime lastUpdated;
+  final int id;
+  final String line;
+  final String tlaref;
+  final String pidref;
+  final String stationLocation;
+  final String atcoCode;
+  final String direction;
+  final List<Tram> trams;
+  final String messageBoard;
+  final DateTime lastUpdated;
 
-    Station({
-        @required this.id,
-        @required this.line,
-        @required this.tlaref,
-        @required this.pidref,
-        @required this.stationLocation,
-        @required this.atcoCode,
-        @required this.direction,
-        @required this.trams,
-        @required this.messageBoard,
-        @required this.lastUpdated,
-    });
+  Station({
+    @required this.id,
+    @required this.line,
+    @required this.tlaref,
+    @required this.pidref,
+    @required this.stationLocation,
+    @required this.atcoCode,
+    @required this.direction,
+    @required this.trams,
+    @required this.messageBoard,
+    @required this.lastUpdated,
+  });
 
-    factory Station.fromJson(String str) => Station.fromMap(json.decode(str));
+  factory Station.fromJson(String str) => Station.fromMap(json.decode(str));
 
-    factory Station.fromMap(Map<String, dynamic> json) => Station(
+  factory Station.fromMap(Map<String, dynamic> json) => Station(
         id: json["Id"],
         line: json["Line"],
         tlaref: json["TLAREF"],
@@ -96,5 +95,5 @@ class Station {
         ],
         messageBoard: json["MessageBoard"],
         lastUpdated: DateTime.parse(json["LastUpdated"]),
-    );
+      );
 }

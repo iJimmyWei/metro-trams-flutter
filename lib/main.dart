@@ -6,6 +6,7 @@ import 'package:metro_trams/screens/search.dart';
 
 Future main() async {
   await DotEnv().load('.env');
+
   runApp(MyApp());
 }
 

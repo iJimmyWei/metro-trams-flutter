@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   NetworkHelper networkHelper = NetworkHelper();
   String stationLocation = "Manchester Airport";
   List<Station> stationPlatforms;
@@ -33,12 +33,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
     timer = Timer.periodic(
         Duration(seconds: 10), (Timer t) => getLatestStationData());
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<void> getLatestStationData() async {
     var data = await networkHelper.getStationData(this.stationLocation);
 
     this.setState(() => stationPlatforms = data);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    var appInBackground = state != AppLifecycleState.resumed;
+    if (appInBackground) {
+      timer.cancel();
+      return;
+    }
+
+    setState(() {
+      timer = Timer.periodic(
+          Duration(seconds: 10), (Timer t) => getLatestStationData());
+    });
   }
 
   void getStationName() async {
@@ -61,7 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var showMessageBoardIcon = stationPlatforms[0].messageBoard.length > 0;
+    var showMessageBoardIcon =
+        stationPlatforms != null && stationPlatforms[0].messageBoard.length > 0;
 
     return Scaffold(
       backgroundColor: Color(kBackgroundColour),
@@ -77,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
             : null,
       ),
       key: _scaffoldKey,
-      body: Center(
+      body: RefreshIndicator(
+        onRefresh: getLatestStationData,
         child: Column(
           children: <Widget>[
             SearchFieldButton(
@@ -85,8 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(Icons.search, color: Colors.pink),
               onPress: getStationName,
             ),
-            RefreshIndicator(
-              onRefresh: () => getLatestStationData(),
+            Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount:
