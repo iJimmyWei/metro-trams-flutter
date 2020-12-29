@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   NetworkHelper networkHelper = NetworkHelper();
   String stationLocation = "Manchester Airport";
   List<Station> stationPlatforms;
@@ -33,12 +33,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
     timer = Timer.periodic(
         Duration(seconds: 10), (Timer t) => getLatestStationData());
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<void> getLatestStationData() async {
     var data = await networkHelper.getStationData(this.stationLocation);
 
     this.setState(() => stationPlatforms = data);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    var appInBackground = state != AppLifecycleState.resumed;
+    if (appInBackground) {
+      timer.cancel();
+      return;
+    }
+
+    setState(() {
+      timer = Timer.periodic(
+          Duration(seconds: 10), (Timer t) => getLatestStationData());
+    });
   }
 
   void getStationName() async {
