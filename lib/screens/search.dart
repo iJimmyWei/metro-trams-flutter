@@ -19,15 +19,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(stationNames);
     return Scaffold(
       backgroundColor: Color(kBackgroundColour),
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
           children: <Widget>[
             SearchFieldInput(
