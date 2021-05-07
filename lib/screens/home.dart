@@ -77,14 +77,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
       content: new Text(value),
-      duration: Duration(seconds: 10),
+      duration: Duration(seconds: 5),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    var showMessageBoardIcon =
-        stationPlatforms != null && stationPlatforms[0].messageBoard.length > 0;
+    var showMessageBoardIcon = stationPlatforms != null &&
+        stationPlatforms[0].messageBoard.length > 0 &&
+        stationPlatforms[0].messageBoard !=
+            "<no message>"; // Bug in the manchester API showing this
 
     return Scaffold(
       backgroundColor: Color(kBackgroundColour),
