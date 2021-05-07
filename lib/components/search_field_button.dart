@@ -11,7 +11,7 @@ class SearchFieldButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 0),
       child: Column(
         children: <Widget>[
           Padding(
